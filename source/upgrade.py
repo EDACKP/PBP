@@ -34,7 +34,7 @@ def detect_research():
             actions=[
                 SetMemory(burst_lasers + 4 * i, Add, 1),
                 SetResearched(i, SCTech, 3, SetTo, 1),
-            ]
+            ],
             preserved=False,
         )
         RawTrigger(
