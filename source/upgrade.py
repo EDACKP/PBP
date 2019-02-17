@@ -24,7 +24,7 @@ def detect_research():
         RawTrigger(
             # [18] Burst Lasers
             conditions=[
-                Research(i, SCTech, 18, Exactly, 1),
+                Research(i, SCUpgr, 18, Exactly, 1),
                 Memory(spider_mines + 4 * i, Exactly, 0),
             ],
             actions=[
@@ -42,7 +42,7 @@ def detect_research():
         spider_mines_Lv2 << RawTrigger(
             nextptr=loopend,
             conditions=[
-                Research(i, SCTech, 18, Exactly, 2),
+                Research(i, SCUpgr, 18, Exactly, 2),
                 Memory(spider_mines + 4 * i, Exactly, 1),
             ],
             actions=[
