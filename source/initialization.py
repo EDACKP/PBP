@@ -25,14 +25,14 @@ def main():
         # burst lasers 업그레이드 요구사항 변경
         SetMemory(0x6558E4, SetTo, 15270115),
         # burst lasers 업그레이드 단계 변경
-        SetMemory(0x58D088 + 0 * 46 + 18, Add, 2)
-        SetMemory(0x58D088 + 1 * 46 + 18, Add, 2)
-        SetMemory(0x58D088 + 2 * 46 + 18, Add, 2)
-        SetMemory(0x58D088 + 3 * 46 + 18, Add, 2)
-        SetMemory(0x58D088 + 4 * 46 + 18, Add, 2)
-        SetMemory(0x58D088 + 5 * 46 + 18, Add, 2)
-        SetMemory(0x58D088 + 6 * 46 + 18, Add, 2)
-        SetMemory(0x58D088 + 7 * 46 + 18, Add, 2)
+        SetMemory(0x58D088 + 0 * 46 + 18, Add, 2),
+        SetMemory(0x58D088 + 1 * 46 + 18, Add, 2),
+        SetMemory(0x58D088 + 2 * 46 + 18, Add, 2),
+        SetMemory(0x58D088 + 3 * 46 + 18, Add, 2),
+        SetMemory(0x58D088 + 4 * 46 + 18, Add, 2),
+        SetMemory(0x58D088 + 5 * 46 + 18, Add, 2),
+        SetMemory(0x58D088 + 6 * 46 + 18, Add, 2),
+        SetMemory(0x58D088 + 7 * 46 + 18, Add, 2),
     ])
     # 히드라리스크 체력을 75로 하향, 방어력을 1로 상향.
     SetUnitSettings("Zerg Hydralisk", "hit points", 75)
