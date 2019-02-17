@@ -11,27 +11,27 @@ def main():
     DoActions([
         # 스카웃 디텍터 추가
         SetMemory(0x664198, Add, 32768),
-        # 머신샵 마인 업그레이드 대신 burst lasers 업그레이드 사용
+        # 머신샵 Spider Mines 테크 대신 [18] Burst Lasers 업그레이드 사용
         SetMemory(0x5186E8, SetTo, 4363344),
         SetMemory(0x5186EC, SetTo, 4338448),
         SetMemory(0x5186F0, SetTo, 1179666),
-        # burst lasers 업그레이드 아이콘, 이름 변경
+        # Burst Lasers 업그레이드 아이콘, 이름 변경
         SetMemory(0x655AE4, Add, 4),
         SetMemory(0x655A64, Subtract, 113),
-        # burst lasers 업그레이드 비용, 시간 변경
+        # Burst Lasers 업그레이드 비용, 시간 변경
         SetMemory(0x655764, Subtract, 100),
         SetMemory(0x655864, Subtract, 100),
         SetMemory(0x655BA4, Subtract, 1000),
-        # burst lasers 업그레이드 요구사항 변경
+        # Burst Lasers 업그레이드 요구사항 변경
         SetMemory(0x6558E4, SetTo, 15270115),
-        # burst lasers 업그레이드 단계 변경
-        SetMemory(0x58D088 + 0 * 46 + 18, Add, 2*65536),
+        # Burst Lasers 업그레이드 단계 변경
+        SetMemory(0x58D088 + 0 * 46 + 18, Add, 2 * 65536),
         SetMemory(0x58D088 + 1 * 46 + 18, Add, 2),
-        SetMemory(0x58D088 + 2 * 46 + 18, Add, 2*65536),
+        SetMemory(0x58D088 + 2 * 46 + 18, Add, 2 * 65536),
         SetMemory(0x58D088 + 3 * 46 + 18, Add, 2),
-        SetMemory(0x58D088 + 4 * 46 + 18, Add, 2*65536),
+        SetMemory(0x58D088 + 4 * 46 + 18, Add, 2 * 65536),
         SetMemory(0x58D088 + 5 * 46 + 18, Add, 2),
-        SetMemory(0x58D088 + 6 * 46 + 18, Add, 2*65536),
+        SetMemory(0x58D088 + 6 * 46 + 18, Add, 2 * 65536),
         SetMemory(0x58D088 + 7 * 46 + 18, Add, 2),
     ])
     # 히드라리스크 체력을 75로 하향, 방어력을 1로 상향.
@@ -45,7 +45,7 @@ def main():
 def SetUnitSettings(unit, data, value):
     global UNIx
     UNIx_data = {
-        # data: size
+        # data: (offset, size)
         "use default settings": (0, 1),
         "hit points":           (1, 4),
         "shield points":        (5, 2),
@@ -61,8 +61,8 @@ def SetUnitSettings(unit, data, value):
     unit = EncodeUnit(unit)
     assert data in UNIx_data, "%s is not an Unit Settings." % (data)
     UNIx[unit] = 0
-    start, size = UNIx_data[data]
-    index = 228 * start + unit * size
+    offset, size = UNIx_data[data]
+    index = 228 * offset + unit * size
     i2bn = {
         1: i2b1,
         2: i2b2,
