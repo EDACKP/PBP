@@ -11,6 +11,17 @@ def main():
     DoActions([
         # 스카웃 디텍터 추가
         SetMemory(0x664198, Add, 32768),
+        # 머신샵 마인 업그레이드 대신 burst lasers 업그레이드 사용
+        SetMemory(0x5186E8, SetTo, 4363344),
+        SetMemory(0x5186EC, SetTo, 4338448),
+        SetMemory(0x5186F0, SetTo, 1179666),
+        # burst lasers 업그레이드 아이콘, 이름 변경
+        SetMemory(0x655AE4, Add, 4),
+        SetMemory(0x655A64, Subtract, 113),
+        # burst lasers 업그레이드 비용, 시간 변경
+        SetMemory(0x655764, Subtract, 100),
+        SetMemory(0x655864, Subtract, 100),
+        SetMemory(0x655BA4, Subtract, 1000),
     ])
     # 히드라리스크 체력을 75로 하향, 방어력을 1로 상향.
     SetUnitSettings("Zerg Hydralisk", "hit points", 75)
