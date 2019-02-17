@@ -22,6 +22,8 @@ def main():
         SetMemory(0x655764, Subtract, 100),
         SetMemory(0x655864, Subtract, 100),
         SetMemory(0x655BA4, Subtract, 1000),
+        # burst lasers 업그레이드 요구사항 변경
+        SetMemory(0x6558E4, SetTo, 15270115),
     ])
     # 히드라리스크 체력을 75로 하향, 방어력을 1로 상향.
     SetUnitSettings("Zerg Hydralisk", "hit points", 75)
