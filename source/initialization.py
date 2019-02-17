@@ -33,10 +33,13 @@ def main():
         SetMemory(0x58D088 + 5 * 46 + 18, Add, 2),
         SetMemory(0x58D088 + 6 * 46 + 18, Add, 2 * 65536),
         SetMemory(0x58D088 + 7 * 46 + 18, Add, 2),
+        # 히드라리스크 체력을 75로 하향, 방어력을 1로 상향.
+        SetMemory(0x6623E8, Subtract, 1280),
+        SetMemory(0x65FEEC, Add, 65536),
     ])
-    # 히드라리스크 체력을 75로 하향, 방어력을 1로 상향.
-    SetUnitSettings("Zerg Hydralisk", "hit points", 75)
-    SetUnitSettings("Zerg Hydralisk", "armor points", 1)
+    # 히드라리스크 체력을 75로 하향, 방어력을 1로 상향. -> 버그때문에 일단 주석처리
+    #SetUnitSettings("Zerg Hydralisk", "hit points", 75)
+    #SetUnitSettings("Zerg Hydralisk", "armor points", 1)
 
     global chkt, UNIx
     chkt.setsection("UNIx", UNIx)
