@@ -15,7 +15,7 @@ class BaseUpgrade:
     pass
 
 
-ion_thrusters = EUDArray(8)
+burst_lasers  = EUDArray(8)
 spider_mines  = EUDArray(8)
 
 
@@ -23,9 +23,18 @@ def detect_research():
     global SCTech, SCUpgr, BWTech, BWUpgr
     for i in mapdata.human:
         RawTrigger(
-            # [17] ion_thrusters
-            conditions=IsResearched(i, SCUpgr, 17, Exactly, 1),
-            actions=SetMemory(ion_thrusters + 4 * i, Add, 1),
+            # [18] burst_lasers
+            conditions=IsResearched(i, SCUpgr, 18, Exactly, 1),
+            actions=SetMemory(burst_lasers + 4 * i, Add, 1),
+            preserved=False,
+        )
+        RawTrigger(
+            # [18] burst_lasers
+            conditions=IsResearched(i, SCUpgr, 18, Exactly, 2),
+            actions=[
+                SetMemory(burst_lasers + 4 * i, Add, 1),
+                SetResearched(i, SCTech, 3, SetTo, 1),
+            ]
             preserved=False,
         )
         RawTrigger(
@@ -40,6 +49,12 @@ def IsResearched(player, category, upgrade_id, cmptype, value):
     offset = category.Researched + player * category.length + upgrade_id
     multiplier = 256 ** (offset % 4)
     return MemoryX(offset, cmptype, value * multiplier, 255 * multiplier)
+
+
+def SetResearched(player, category, upgrade_id, cmptype, value):
+    offset = category.Researched + player * category.length + upgrade_id
+    multiplier = 256 ** (offset % 4)
+    return SetMemoryX(offset, cmptype, value * multiplier, 255 * multiplier)
 
 
 def init():
