@@ -15,7 +15,6 @@ class BaseUpgrade:
     pass
 
 
-burst_lasers  = EUDArray(8)
 spider_mines  = EUDArray(8)
 
 
@@ -23,38 +22,83 @@ def detect_research():
     global SCTech, SCUpgr, BWTech, BWUpgr
     for i in mapdata.human:
         RawTrigger(
-            # [18] burst_lasers
-            conditions=IsResearched(i, SCUpgr, 18, Exactly, 1),
-            actions=SetMemory(burst_lasers + 4 * i, Add, 1),
-            preserved=False,
-        )
-        RawTrigger(
-            # [18] burst_lasers
-            conditions=IsResearched(i, SCUpgr, 18, Exactly, 2),
+            # [18] Burst Lasers
+            conditions=[
+                Research(i, SCTech, 18, Exactly, 1),
+                Memory(spider_mines + 4 * i, Exactly, 0),
+            ],
             actions=[
-                SetMemory(burst_lasers + 4 * i, Add, 1),
-                SetResearched(i, SCTech, 3, SetTo, 1),
+                # [3] Spider Mines
+                SetResearch(i, SCTech, 3, Add, 1),
+                SetMemory(spider_mines + 4 * i, Add, 1),
             ],
             preserved=False,
         )
-        RawTrigger(
-            # [3] spider_mines
-            conditions=IsResearched(i, SCTech, 3, Exactly, 1),
-            actions=SetMemory(spider_mines + 4 * i, Add, 1),
+
+        spider_mines_Lv2 = Forward()
+        loopstart = Forward()
+        loopend = Forward()
+
+        spider_mines_Lv2 << RawTrigger(
+            nextptr=loopend,
+            conditions=[
+                Research(i, SCTech, 18, Exactly, 2),
+                Memory(spider_mines + 4 * i, Exactly, 1),
+            ],
+            actions=[
+                SetMemory(spider_mines + 4 * i, Add, 1),
+                SetNextPtr(spider_mines_Lv2, loopstart),
+            ],
             preserved=False,
         )
 
+        PushTriggerScope()
+        loopstart << NextTrigger()
+        for ptr, epd in EUDLoopPlayerUnit(i):
+            unit_type = epd + 0x64 // 4
+            if EUDIf()([
+                MemoryEPD(unit_type, Exactly,
+                          EncodeUnit("Terran Vulture")),
+            ]):
+                spider_mine_count = epd + 0xC0 // 4
+                if EUDIf()([
+                    MemoryEPD(spider_mine_count, AtMost, 2),
+                ]):
+                    DoActions([
+                        SetMemoryEPD(spider_mine_count, Add, 1),
+                    ])
+                EUDEndIf()
+            EUDEndIf()
+        RawTrigger(
+            nextptr=loopend,
+            actions=SetNextPtr(spider_mines_Lv2, loopend),
+        )
+        PopTriggerScope()
 
-def IsResearched(player, category, upgrade_id, cmptype, value):
+        loopend << NextTrigger()
+
+
+def Research(player, category, upgrade_id, cmptype, value):
+    upgrade_id = _process_upgrade_id(category, upgrade_id)
     offset = category.Researched + player * category.length + upgrade_id
     multiplier = 256 ** (offset % 4)
     return MemoryX(offset, cmptype, value * multiplier, 255 * multiplier)
 
 
-def SetResearched(player, category, upgrade_id, cmptype, value):
+def SetResearch(player, category, upgrade_id, modifier, value):
+    upgrade_id = _process_upgrade_id(category, upgrade_id)
     offset = category.Researched + player * category.length + upgrade_id
     multiplier = 256 ** (offset % 4)
-    return SetMemoryX(offset, cmptype, value * multiplier, 255 * multiplier)
+    return SetMemoryX(offset, modifier, value * multiplier, 255 * multiplier)
+
+
+def _process_upgrade_id(category, upgrade_id):
+    global SCTech, SCUpgr, BWTech, BWUpgr
+    if category == BWTech:
+        upgrade_id -= SCTech.length
+    elif category == BWUpgr:
+        upgrade_id -= SCUpgr.length
+    return upgrade_id
 
 
 def init():
