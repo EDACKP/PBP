@@ -19,9 +19,8 @@ def main():
                 MemoryXEPD(spider_mine_count, Exactly, 3, 0xFF)
             )
             player = f_bread_epd(epd + 0x4C // 4, 0)
-            if EUDIfNot()([
-                MemoryEPD(EPD(upgrade.ion_thrusters) + player, Exactly, 1),
-                MemoryEPD(EPD(upgrade.spider_mines) + player, Exactly, 1),
+            if EUDIf()([
+                MemoryEPD(EPD(upgrade.burst_lasers) + player, AtMost, 1),
             ]):
                 DoActions([
                     SetMemoryEPD(spider_mine_count, Subtract, 1)
